@@ -51,6 +51,26 @@ router.get('/', (req, res) => {
     })
   });
 
+  router.put('/:id', (req, res) => {
+    if (!req.body.name){
+        res.status(400).json({message:'A name is required to edit a Bear'})
+    }else{
+    db('bears')
+    .where({id:req.params.id})
+    .update(req.body)
+    .then(count=>{
+      if (count>0) {
+        res.status(200).json({message:`${count} record was updated`})
+      }else{
+        res.status(404).json({message:'the specified Bear does not exist'})
+      }
+    })
+    .catch(err =>{
+      res.status(500).json(err)
+    })
+}
+  });
+
   router.delete('/:id', (req, res) => {
     db('bears')
     .where({id:req.params.id})
